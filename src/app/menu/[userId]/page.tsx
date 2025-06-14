@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase";
-import MenuClientPage from "./MenuClientPage";
+import MenuClientPage from "../MenuClientPage";
 import { notFound } from 'next/navigation';
 
 type MenuPageProps = {
