@@ -2,18 +2,15 @@ import { createClient } from "@/lib/supabase";
 import MenuClientPage from "../MenuClientPage";
 import { notFound } from 'next/navigation';
 
-type MenuPageProps = {
-    params: {
-        userId: string;
-    };
-    searchParams: {
-        table: string;
-    };
-};
-
 // This is the main server component for the menu page.
 // It fetches the data and passes it to the client component.
-export default async function MenuPage({ params, searchParams }: MenuPageProps) {
+export default async function MenuPage({
+    params,
+    searchParams,
+}: {
+    params: { userId: string };
+    searchParams: { table: string };
+}) {
     const supabase = createClient();
     const { userId } = params;
     const { table } = searchParams;
