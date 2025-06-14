@@ -2,17 +2,15 @@ import { createClient } from "@/lib/supabase";
 import MenuClientPage from "../MenuClientPage";
 import { notFound } from 'next/navigation';
 
-type Props = {
-  params: { userId: string };
-  searchParams: { [key: string]: string | string[] | undefined };
-};
-
 // This is the main server component for the menu page.
 // It fetches the data and passes it to the client component.
 export default async function MenuPage({
     params,
     searchParams,
-}: Props) {
+}: {
+    params: { userId: string };
+    searchParams: { [key: string]: string | string[] | undefined };
+}) {
     const supabase = createClient();
     const { userId } = params;
     const table = searchParams.table as string;
