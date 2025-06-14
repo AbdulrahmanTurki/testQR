@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase";
 import MenuClientPage from "../MenuClientPage";
 import { notFound } from 'next/navigation';
+import { JSX } from "react";
 
 // This is the main server component for the menu page.
 // It fetches the data and passes it to the client component.
@@ -10,7 +11,7 @@ export default async function MenuPage({
 }: {
     params: { userId: string };
     searchParams: { [key: string]: string | string[] | undefined };
-}) {
+}): Promise<JSX.Element> {
     const supabase = createClient();
     const { userId } = params;
     const table = searchParams.table as string;
