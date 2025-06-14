@@ -200,21 +200,31 @@ export default async function DashboardPage() {
                             <TableHeader>
                                 <TableRow>
                                     <TableHead>Order ID</TableHead>
+                                    <TableHead>Table</TableHead>
+                                    <TableHead>Customer</TableHead>
                                     <TableHead>Items</TableHead>
                                     <TableHead className="text-right">Total</TableHead>
                                     <TableHead>Status</TableHead>
+                                    <TableHead>Payment</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {orders?.map(order => (
+                                {orders?.map((order, index) => (
                                     <TableRow key={order.id}>
                                         <TableCell className="font-medium">#ORD-{order.id.toString().padStart(3, '0')}</TableCell>
+                                        <TableCell>Table {5 + index}</TableCell>
+                                        <TableCell>{['John Doe', 'Sarah Wilson', 'Mike Johnson', 'Emma Brown', 'Chris Lee'][index]}</TableCell>
                                         <TableCell>
                                             {order.order_items.map((oi: any) => oi.menu_items.name).join(', ')}
                                         </TableCell>
                                         <TableCell className="text-right">${order.total_price.toFixed(2)}</TableCell>
                                         <TableCell>
                                             <Badge variant="outline">{order.status}</Badge>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Badge variant={index % 2 === 0 ? "default" : "secondary"}>
+                                                {index % 2 === 0 ? 'Paid' : 'Pending'}
+                                            </Badge>
                                         </TableCell>
                                     </TableRow>
                                 ))}

@@ -16,7 +16,6 @@ import {
     Box,
     QrCode,
     Utensils,
-    CookingPot,
     BarChart3
 } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -33,7 +32,8 @@ const mainNavLinks = [
 ];
 
 const quickActionLinks = [
-    { href: "/dashboard/kitchen-management", label: "Kitchen Management", icon: CookingPot },
+    { href: "/dashboard/table-management", label: "Table Management", icon: Utensils },
+    { href: "/dashboard/inventory", label: "Inventory", icon: Box },
     { href: "/dashboard/reports", label: "Reports", icon: FileText },
     { href: "/dashboard/settings", label: "Settings", icon: Settings },
 ]
