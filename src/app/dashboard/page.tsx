@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { createClient } from "@/lib/supabase"
 import {
     Card,
     CardContent,
@@ -10,135 +11,100 @@ import {
     Utensils,
     CookingPot,
     QrCode,
-    BarChart3
+    BarChart3,
+    Settings,
+    DollarSign,
+    Package,
 } from "lucide-react"
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
-import { Progress } from "@/components/ui/progress"
-import { Button } from "@/components/ui/button"
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+    const supabase = createClient();
+
+    // Fetch analytics data for summary
+    const { data: orders, error: ordersError } = await supabase
+        .from('orders')
+        .select('total_price');
+
+    const totalRevenue = orders?.reduce((acc, order) => acc + order.total_price, 0) ?? 0;
+    const totalOrders = orders?.length ?? 0;
+
+    const navItems = [
+        {
+            href: "/dashboard/menu-management",
+            icon: Utensils,
+            title: "Menu Management",
+            description: "Add, edit, and organize your menu items."
+        },
+        {
+            href: "/dashboard/kitchen-management",
+            icon: CookingPot,
+            title: "Kitchen Display",
+            description: "View and manage incoming orders in real-time."
+        },
+        {
+            href: "/dashboard/qr-code-generator",
+            icon: QrCode,
+            title: "QR Code Generator",
+            description: "Create and manage QR codes for your tables."
+        },
+        {
+            href: "/dashboard/analytics",
+            icon: BarChart3,
+            title: "Analytics",
+            description: "View detailed sales and customer analytics."
+        },
+        {
+            href: "/dashboard/settings",
+            icon: Settings,
+            title: "Settings",
+            description: "Manage your account and restaurant settings."
+        }
+    ];
+
     return (
-        <div className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
-            <div className="flex flex-col gap-2">
-                <h1 className="text-2xl font-semibold md:text-3xl">Welcome to your Dashboard</h1>
-                <p className="text-muted-foreground">
-                    Here's a quick overview of your restaurant's operations.
-                </p>
+        <>
+            <div className="flex items-center justify-between space-y-2">
+                <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
             </div>
-            <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
-                <Link href="/dashboard/menu-management">
-                    <Card className="hover:bg-muted/80 transition-colors">
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">Menu Management</CardTitle>
-                            <Utensils className="h-5 w-5 text-muted-foreground" />
-                        </CardHeader>
-                        <CardContent>
-                            <p className="text-xs text-muted-foreground">
-                                Add, edit, and manage your menu items.
-                            </p>
-                        </CardContent>
-                    </Card>
-                </Link>
-                <Link href="/dashboard/kitchen-management">
-                    <Card className="hover:bg-muted/80 transition-colors">
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">Kitchen Display</CardTitle>
-                            <CookingPot className="h-5 w-5 text-muted-foreground" />
-                        </CardHeader>
-                        <CardContent>
-                            <p className="text-xs text-muted-foreground">
-                                View and manage incoming orders in real-time.
-                            </p>
-                        </CardContent>
-                    </Card>
-                </Link>
-                <Link href="/dashboard/qr-code-generator">
-                    <Card className="hover:bg-muted/80 transition-colors">
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">QR Code Generator</CardTitle>
-                            <QrCode className="h-5 w-5 text-muted-foreground" />
-                        </CardHeader>
-                        <CardContent>
-                            <p className="text-xs text-muted-foreground">
-                                Generate QR codes for tables.
-                            </p>
-                        </CardContent>
-                    </Card>
-                </Link>
-                <Link href="/dashboard/analytics">
-                    <Card className="hover:bg-muted/80 transition-colors">
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">Analytics</CardTitle>
-                            <BarChart3 className="h-5 w-5 text-muted-foreground" />
-                        </CardHeader>
-                        <CardContent>
-                            <p className="text-xs text-muted-foreground">
-                                View detailed sales and customer analytics.
-                            </p>
-                        </CardContent>
-                    </Card>
-                </Link>
-            </div>
-            <div>
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Transactions</CardTitle>
-                        <CardDescription>
-                            A list of your recent transactions.
-                        </CardDescription>
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
+                 <Card>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle className="text-sm font-medium">
+                            Total Revenue
+                        </CardTitle>
+                        <DollarSign className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>Reciever</TableHead>
-                                    <TableHead>Type</TableHead>
-                                    <TableHead>Status</TableHead>
-                                    <TableHead>Date</TableHead>
-                                    <TableHead className="text-right">Amount</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                <TableRow>
-                                    <TableCell>Emma Ryan Jr.</TableCell>
-                                    <TableCell>Salary</TableCell>
-                                    <TableCell>
-                                        <Badge variant="destructive">Pending</Badge>
-                                    </TableCell>
-                                    <TableCell>Feb 19th, 2023</TableCell>
-                                    <TableCell className="text-right">$3,892</TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell>Adrian Daren</TableCell>
-                                    <TableCell>Bonus</TableCell>
-                                    <TableCell>
-                                        <Badge>Done</Badge>
-                                    </TableCell>
-                                    <TableCell>Feb 18th, 2023</TableCell>
-                                    <TableCell className="text-right">$1,073</TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell>Roxanne Hills</TableCell>
-                                    <TableCell>Salary</TableCell>
-                                    <TableCell>
-                                        <Badge>Done</Badge>
-                                    </TableCell>
-                                    <TableCell>Apr 16th, 2023</TableCell>
-                                    <TableCell className="text-right">$2,790</TableCell>
-                                </TableRow>
-                            </TableBody>
-                        </Table>
+                        <div className="text-2xl font-bold">${totalRevenue.toFixed(2)}</div>
+                    </CardContent>
+                </Card>
+                 <Card>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle className="text-sm font-medium">Total Orders</CardTitle>
+                        <Package className="h-4 w-4 text-muted-foreground" />
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-bold">+{totalOrders}</div>
                     </CardContent>
                 </Card>
             </div>
-        </div>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {navItems.map((item) => (
+                    <Link key={item.href} href={item.href}>
+                        <Card className="h-full hover:bg-muted/50 transition-colors flex flex-col justify-between">
+                            <CardHeader className="flex-row items-center gap-4 space-y-0">
+                                <div className="p-3 rounded-md bg-muted">
+                                   <item.icon className="h-6 w-6" />
+                                </div>
+                                <CardTitle>{item.title}</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <CardDescription>{item.description}</CardDescription>
+                            </CardContent>
+                        </Card>
+                    </Link>
+                ))}
+            </div>
+        </>
     )
 } 
