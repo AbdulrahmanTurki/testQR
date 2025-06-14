@@ -7,14 +7,14 @@ import { JSX } from "react";
 // It fetches the data and passes it to the client component.
 export default async function MenuPage({
     params,
-    searchParams,
+    // searchParams, // Temporarily remove for debugging
 }: {
     params: { userId: string };
-    searchParams: { [key: string]: string | string[] | undefined };
+    // searchParams: { [key: string]: string | string[] | undefined };
 }): Promise<JSX.Element> {
     const supabase = createClient();
     const { userId } = params;
-    const table = searchParams.table as string;
+    const table = "debug"; // Hardcode for debugging
 
     // Fetch profile data and menu items in parallel
     const [profileResult, menuItemsResult] = await Promise.all([
