@@ -52,7 +52,7 @@ export default function AnalyticsPage() {
             // Fetch all orders for the logged-in user
             const { data: orders, error: ordersError } = await supabase
                 .from('orders')
-                .select('user_id, total_price, created_at, status, order_items!inner(*, menu_items!inner(name))');
+                .select('id, user_id, total_price, created_at, status, order_items!inner(*, menu_items!inner(name))');
 
             if (ordersError || !orders) {
                 console.error("Error fetching orders:", ordersError);
