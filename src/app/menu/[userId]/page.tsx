@@ -2,18 +2,20 @@ import { createClient } from "@/lib/supabase";
 import MenuClientPage from "../MenuClientPage";
 import { notFound } from 'next/navigation';
 
+type Props = {
+  params: { userId: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+};
+
 // This is the main server component for the menu page.
 // It fetches the data and passes it to the client component.
 export default async function MenuPage({
     params,
     searchParams,
-}: {
-    params: { userId: string };
-    searchParams: { table: string };
-}) {
+}: Props) {
     const supabase = createClient();
     const { userId } = params;
-    const { table } = searchParams;
+    const table = searchParams.table as string;
 
     // Fetch profile data and menu items in parallel
     const [profileResult, menuItemsResult] = await Promise.all([
